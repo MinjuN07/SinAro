@@ -14,7 +14,7 @@ class LetterService(BaseService):
     def _load_letter_data(self) -> Dict:
         """letter_data.json 파일에서 편지 데이터를 로드합니다."""
         try:
-            file_path = os.path.join('app', 'data', 'letter_data.json')
+            file_path = os.path.join('app', 'data', 'letter_template.json')
             with open(file_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
@@ -25,7 +25,7 @@ class LetterService(BaseService):
         """ID와 day에 해당하는 편지 템플릿을 찾습니다."""
         try:
             template = next(
-                (letter['text'] for letter in self.letter_data 
+                (letter['template'] for letter in self.letter_data 
                 if str(letter['id']) == str(id) and str(letter['day']) == str(day)),
                 None
             )
@@ -54,11 +54,17 @@ class LetterService(BaseService):
             for item in text_data
         ])
 
-        prompt = f"""아래의 기존 편지를 기반으로 하되, 주어진 감정과 키워드들 중 3가지를 자연스럽게 통합하여 완성된 하나의 편지로 만들어줘.
-                    기존 편지:
-                    {template}
-                    감정과 그 감정에 대한 키워드:
-                    {emotions_keywords_str}
+        prompt = f"""
+        
+            다음 감정과 키워드들 중 3가지를 자연스럽게 편지 템플릿에 추가해서 편지를 완성해줘:
+            편지 템플릿 :
+            {template}
+            감정과 키워드 :
+            {emotions_keywords_str}
+            
+            - template의 opening과 closing을 잘 지켜서 편지를 작성해줘
+            - 키워드가 main_content에 잘 조화될 수 있게 편지를 작성해줘 
+            - 한국어 문자열로만 이루어진 하나의 완성된 편지로 작성해줘
         """
 
         self.logger.debug(f"Generating letter for ID: {id}, Day: {day}")
