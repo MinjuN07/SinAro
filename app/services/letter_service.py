@@ -12,9 +12,9 @@ class LetterService(BaseService):
         self.options = {
             "num_ctx": 8096,
             "num_predict": 4048,
-            "temperature": 0.8,
-            "top_p": 0.95,
-            "top_k": 40,
+            "temperature": 0.5,
+            "top_p": 0.7,
+            "top_k": 20,
             "frequency_penalty": 0.5,
         }
         self.letter_data = self._load_letter_data()
@@ -29,7 +29,7 @@ class LetterService(BaseService):
             self.logger.error(f"Error loading letter data: {str(e)}")
             return {}
 
-    def _find_letter_template(self, id: str, day: str) -> str:
+    def _find_letter_template(self, id: str, day: str) -> Dict:
         """ID와 day에 해당하는 편지 템플릿을 찾습니다."""
         try:
             template = next(
@@ -56,24 +56,42 @@ class LetterService(BaseService):
         """편지를 생성합니다."""
         template = self._find_letter_template(id, day)
         
-        text_data = [{"emotion": item.emotion, "keyword": item.keyword} for item in text]
-        emotions_keywords_str = "\n".join([
-            f"- 감정: {item['emotion']}, 키워드: {item['keyword']}" 
-            for item in text_data
-        ])
+        opening = template['opening']
+        main_themes = [
+            f"- {content['theme']} (감정: {content['emotion']}, 키워드: {content['keyword']})"
+            for content in template['main_content']
+        ]
+        closing = template['closing']
 
-        prompt = f"""
-            다음 감정과 키워드들 중 3가지를 자연스럽게 편지 템플릿에 추가해서 편지를 완성해줘:
-            
-            편지 템플릿 :
-            {template}
-            감정과 키워드 :
-            {emotions_keywords_str}
-            
-            - template의 opening과 closing을 잘 지켜서 편지를 작성해줘
-            - 키워드가 main_content에 잘 조화될 수 있게 편지를 작성해줘 
-            - 한국어 문자열로만 이루어진 하나의 완성된 편지로 작성해줘
-        """
+        new_emotions_keywords = [
+            f"- 감정: {item.emotion}, 키워드: {item.keyword}" 
+            for item in text
+        ]
+
+        prompt = f"""다음 편지 템플릿을 기반으로 새로운 감정과 키워드를 자연스럽게 통합하여 편지를 완성해주세요:
+
+시작 부분:
+{opening}
+
+원래 편지의 주요 테마:
+{chr(10).join(main_themes)}
+
+새롭게 통합할 감정과 키워드:
+{chr(10).join(new_emotions_keywords)}
+
+끝맺음:
+{closing}
+
+요구사항:
+1. 시작 부분과 끝맺음은 그대로 유지해주세요
+2. 주어진 새로운 감정과 키워드를 자연스럽게 편지 내용에 녹여주세요
+3. 편지의 전체적인 흐름을 자연스럽게 만들어주세요
+4. 반드시 한국어로 작성해주세요
+5. 이모티콘은 사용하지 말아주세요
+6. 하나의 완성된 편지로 작성해주세요"""
 
         self.logger.debug(f"Generating letter for ID: {id}, Day: {day}")
-        return await self._generate_response(prompt=prompt)
+        return await self._generate_response(
+            prompt=prompt,
+            options=self.options
+        )
