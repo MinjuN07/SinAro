@@ -25,12 +25,7 @@ PARAMETER temperature 0.7
 PARAMETER top_p 0.9          
 PARAMETER top_k 40          
 PARAMETER presence_penalty 0.3
-PARAMETER frequency_penalty 0.3 
-
-
-PARAMETER num_ctx 2048     
-PARAMETER num_threads 4      
-PARAMETER batch_size 512    
+PARAMETER frequency_penalty 0.3          
 
 PARAMETER stop "<|eot_id|>"
 PARAMETER stop "<|start_header_id|>"

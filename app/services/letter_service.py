@@ -10,10 +10,12 @@ class LetterService(BaseService):
     def __init__(self):
         super().__init__(ModelType.LETTER)
         self.options = {
+            "num_ctx": 8096,
+            "num_predict": 4048,
             "temperature": 0.8,
             "top_p": 0.95,
-            "num_ctx": 4096,
-            "frequency_penalty": 0.5
+            "top_k": 40,
+            "frequency_penalty": 0.5,
         }
         self.letter_data = self._load_letter_data()
 
