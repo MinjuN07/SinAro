@@ -1,0 +1,19 @@
+FROM ko-gemma-2-9b-it.Q5_K_M.gguf
+
+TEMPLATE """<start_of_turn>system
+{{ .System }}
+<end_of_turn>
+<start_of_turn>user
+{{ .Prompt }}
+<end_of_turn>
+<start_of_turn>assistant
+{{ .Response }}
+<end_of_turn>"""
+
+SYSTEM """너는 일기 요약 전문가야. 
+일기의 자연스러운 문체와 감정을 그대로 유지하면서 핵심 내용만 요약해줘.
+분석하거나 나누지 말고, 원문의 표현을 최대한 살려서 하나의 완성된 일기처럼 요약해야 해.
+"""
+
+PARAMETER stop "<start_of_turn>"
+PARAMETER stop "<end_of_turn>"
