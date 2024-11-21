@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class OllamaClient:
     def __init__(self):
         self.base_url = settings.OLLAMA_API_BASE
-        self.timeout = httpx.Timeout(1000.0)
+        self.timeout = httpx.Timeout(300.0)
         
     async def generate(self, model: str, prompt: str):
         try:
