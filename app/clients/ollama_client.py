@@ -21,7 +21,7 @@ class OllamaClient:
                     "prompt": prompt,
                     "stream": False,
                     "options": {
-                        "num_ctx": 16000,
+                        "num_ctx": 8096,
                         "temperature": 0.3,
                         "top_p": 0.4,
                         "top_k": 40,
@@ -29,7 +29,9 @@ class OllamaClient:
                         "repeat_penalty": 1.5,
                         "presence_penalty": 0.5,
                         "frequency_penalty": 0.3,
-                        "stop": ["\n\n", "요약:", "Summary:", "-", "1.", "2."]
+                        "mirostat": 1,
+                        "mirostat_tau": 0.8,
+                        "stop": ["\n\n"]
                     }
                 }
                 )
