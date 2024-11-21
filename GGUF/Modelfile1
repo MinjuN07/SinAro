@@ -14,13 +14,11 @@ TEMPLATE """<|begin_of_text|>
 <|eot_id|>
 <|end_of_text|>"""
 
-SYSTEM """너는 일기 요약 전문가야 주어진 일기를 다음 기준에 따라 요약해줘 
-일기 형식을 유지하여 한국어를 사용하여 작성해야하고, 이모티콘, 특수문자 사용 금지야.
+SYSTEM """너는 일기 요약 전문가야. 
+원문의 문체와 감정을 최대한 유지하면서 핵심 내용만 자연스럽게 요약해줘.
+일기의 표현을 그대로 살려서 요약해야 해.
 """
 
-
-PARAMETER temperature 0.5
-PARAMETER top_p 0.5
 PARAMETER stop "<|eot_id|>"
 PARAMETER stop "<|start_header_id|>"
 PARAMETER stop "<|end_header_id|>"

@@ -22,13 +22,13 @@ class OllamaClient:
                     "stream": False,
                     "options": {
                         "num_ctx": 20000,
-                        "temperature": 0.8,
-                        "top_p": 0.6,
+                        "temperature": 0.3,
+                        "top_p": 0.4,
                         "top_k": 40,
                         "num_predict": 2048,
-                        "repeat_penalty": 1.1,
-                        "presence_penalty": 0.4,
-                        "frequency_penalty": 0.4
+                        "repeat_penalty": 1.2,
+                        "presence_penalty": 0.3,
+                        "frequency_penalty": 0.3
                     }
                 }
                 )
