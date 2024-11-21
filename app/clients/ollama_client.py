@@ -23,7 +23,7 @@ class OllamaClient:
                     "options": {
                         "num_ctx": 8096,
                         "temperature": 0.3,
-                        "top_p": 0.4,
+                        "top_p": 0.3,
                         "top_k": 40,
                         "num_predict": 2100,
                         "repeat_penalty": 1.5,
@@ -31,7 +31,7 @@ class OllamaClient:
                         "frequency_penalty": 0.3,
                         "mirostat": 1,
                         "mirostat_tau": 0.8,
-                        "stop": ["\n\n"]
+                        "stop": ["\n\n\n"]
                     }
                 }
                 )
