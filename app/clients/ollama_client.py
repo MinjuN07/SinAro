@@ -21,11 +21,11 @@ class OllamaClient:
                     "prompt": prompt,
                     "stream": False,
                     "options": {
-                        "num_ctx": 20000,
+                        "num_ctx": 16000,
                         "temperature": 0.3,
                         "top_p": 0.4,
                         "top_k": 40,
-                        "num_predict": 2048,
+                        "num_predict": 2100,
                         "repeat_penalty": 1.2,
                         "presence_penalty": 0.3,
                         "frequency_penalty": 0.3
