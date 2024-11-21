@@ -1,5 +1,6 @@
 from app.core.constants import SYSTEM_PROMPTS
 from app.core.exceptions import APIError
+from app.core.model_config import ModelType
 from app.services.base_service import BaseService
 import os
 import json
@@ -7,7 +8,7 @@ from typing import List, Dict
 
 class LetterService(BaseService):
     def __init__(self):
-        super().__init__()
+        super().__init__(ModelType.LETTER)
         self.letter_data = self._load_letter_data()
 
     def _load_letter_data(self) -> Dict:
@@ -47,9 +48,10 @@ class LetterService(BaseService):
         """편지를 생성합니다."""
         template = self._find_letter_template(id, day)
         
+        text_data = [{"emotion": item.emotion, "keyword": item.keyword} for item in text]
         emotions_keywords_str = "\n".join([
             f"- 감정: {item['emotion']}, 키워드: {item['keyword']}" 
-            for item in text
+            for item in text_data
         ])
 
         prompt = f"""아래의 기존 편지를 기반으로 하되, 주어진 감정과 키워드들 중 3가지를 자연스럽게 통합하여 완성된 하나의 편지로 만들어줘.
@@ -60,7 +62,4 @@ class LetterService(BaseService):
         """
 
         self.logger.debug(f"Generating letter for ID: {id}, Day: {day}")
-        return await self._generate_response(
-            prompt=prompt,
-            system_prompt=SYSTEM_PROMPTS["LETTER_GENERATE"]
-        )
+        return await self._generate_response(prompt=prompt)
