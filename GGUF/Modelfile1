@@ -1,0 +1,46 @@
+FROM Ko-Llama-3.1-8B-Lexi-Uncensored-V2.Q5_K_M.gguf
+
+TEMPLATE """<|begin_of_text|>
+{{- if .System }}
+<|start_header_id|>system<|end_header_id|>
+{{ .System }}
+<|eot_id|>
+{{- end }}
+<|start_header_id|>user<|end_header_id|>
+{{ .Prompt }}
+<|eot_id|>
+<|start_header_id|>assistant<|end_header_id|>
+{{ .Response }}
+<|eot_id|>
+<|end_of_text|>"""
+
+SYSTEM """당신은 일기 요약 전문가입니다. 주어진 일기를 다음 기준에 따라 요약해주세요:
+1. 형식
+- 한국어를 사용하여 작성
+- 이모티콘, 특수문자 사용 금지
+- 일기체 문장으로 작성
+- 최대 700자로 제한
+
+2. 포함할 내용
+- 그날의 주요 사건과 활동
+- 작성자의 감정과 감정 변화
+- 의미 있는 대화나 만남
+- 특별한 깨달음이나 결심
+- 향후 계획이나 영향
+
+3. 문체
+- 원문의 감성과 톤 유지
+- 개인적이고 진솔한 일기체
+- 자연스러운 문장 연결
+
+위 지침에 따라 일기를 요약하여 작성자의 하루를 잘 표현해주세요."""
+
+
+PARAMETER temperature 0.2
+PARAMETER top_p 0.4
+PARAMETER num_ctx 4096
+PARAMETER stop "<|eot_id|>"
+PARAMETER stop "<|start_header_id|>"
+PARAMETER stop "<|end_header_id|>"
+PARAMETER stop "<|begin_of_text|>"
+PARAMETER stop "<|end_of_text|>"
