@@ -9,6 +9,12 @@ from typing import List, Dict
 class LetterService(BaseService):
     def __init__(self):
         super().__init__(ModelType.LETTER)
+        self.options = {
+            "temperature": 0.8,
+            "top_p": 0.95,
+            "num_ctx": 4096,
+            "frequency_penalty": 0.5
+        }
         self.letter_data = self._load_letter_data()
 
     def _load_letter_data(self) -> Dict:
@@ -55,8 +61,8 @@ class LetterService(BaseService):
         ])
 
         prompt = f"""
-        
             다음 감정과 키워드들 중 3가지를 자연스럽게 편지 템플릿에 추가해서 편지를 완성해줘:
+            
             편지 템플릿 :
             {template}
             감정과 키워드 :

@@ -2,6 +2,7 @@ import httpx
 from app.core.config import settings
 import logging
 import json
+from typing import Dict, Any, Optional
 from fastapi import Response
 
 logger = logging.getLogger(__name__)
@@ -11,31 +12,21 @@ class OllamaClient:
         self.base_url = settings.OLLAMA_API_BASE
         self.timeout = httpx.Timeout(300.0)
         
-    async def generate(self, model: str, prompt: str):
+    async def generate(self, model: str, prompt: str, options: Optional[Dict[str, Any]] = None):
         try:
+            request_data = {
+                "model": model,
+                "prompt": prompt,
+                "stream": False
+            }
+            if options:
+                request_data["options"] = options
+                
             async with httpx.AsyncClient(timeout=self.timeout) as client:
                 response = await client.post(
                     f"{self.base_url}/generate",
-                    json={
-                    "model": model,
-                    "prompt": prompt,
-                    "stream": False,
-                    "options": {
-                        "num_ctx": 8096,
-                        "temperature": 0.2,
-                        "top_p": 0.3,
-                        "top_k": 20,
-                        "num_predict": 2100,
-                        "repeat_penalty": 1.5,
-                        "presence_penalty": 0.5,
-                        "frequency_penalty": 0.3,
-                        "mirostat": 1,
-                        "mirostat_tau": 0.5,
-                        "stop": ["\n\n\n"]
-                    }
-                }
+                    json=request_data
                 )
-                
                 return Response(
                     content=response.text,
                     media_type="application/json"
