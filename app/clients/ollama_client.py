@@ -26,9 +26,10 @@ class OllamaClient:
                         "top_p": 0.4,
                         "top_k": 40,
                         "num_predict": 2100,
-                        "repeat_penalty": 1.2,
-                        "presence_penalty": 0.3,
-                        "frequency_penalty": 0.3
+                        "repeat_penalty": 1.5,
+                        "presence_penalty": 0.5,
+                        "frequency_penalty": 0.3,
+                        "stop": ["\n\n", "요약:", "Summary:", "-", "1.", "2."]
                     }
                 }
                 )
