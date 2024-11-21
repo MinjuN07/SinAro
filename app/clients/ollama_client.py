@@ -17,10 +17,20 @@ class OllamaClient:
                 response = await client.post(
                     f"{self.base_url}/generate",
                     json={
-                        "model": model,
-                        "prompt": prompt,
-                        "stream": False
+                    "model": model,
+                    "prompt": prompt,
+                    "stream": False,
+                    "options": {
+                        "num_ctx": 20000,
+                        "temperature": 0.8,
+                        "top_p": 0.6,
+                        "top_k": 40,
+                        "num_predict": 2048,
+                        "repeat_penalty": 1.1,
+                        "presence_penalty": 0.4,
+                        "frequency_penalty": 0.4
                     }
+                }
                 )
                 
                 return Response(
