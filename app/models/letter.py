@@ -6,6 +6,6 @@ class EmotionKeyword(BaseModel):
     keyword: str = Field(..., description="키워드")
 
 class LetterRequest(BaseModel):
-    id: str = Field(..., description="편지 주인의 ID")
-    day: str = Field(..., description="편지의 순서")
+    id: int = Field(..., description="편지 주인의 ID")
+    day: int = Field(..., description="편지의 순서")
     text: List[EmotionKeyword] = Field(..., description="감정과 키워드 데이터")
