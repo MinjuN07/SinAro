@@ -4,6 +4,7 @@ from app.core.model_config import ModelType
 from app.core.exceptions import APIError
 import logging
 from typing import Any, Dict, Optional
+import json
 
 class BaseService:
     def __init__(self, model_type: ModelType):
@@ -11,17 +12,30 @@ class BaseService:
         self.model_name = model_type.value
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    async def _generate_response(self, prompt: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    async def _generate_response(self, prompt: str, options: Optional[Dict[str, Any]] = None) -> str:
         """공통 텍스트 생성 로직"""
         try:
             self.logger.debug(f"Generating response with prompt length: {len(prompt)}")
-            response_data = await self.client.generate(
+            response = await self.client.generate(
                 model=self.model_name,
                 prompt=prompt,
                 options=options
             )
+            response_text = response.text
+            
+            response_data = json.loads(response_text)
+            
+            generated_text = response_data.get('response', '')
+            
             self.logger.debug("Response generated successfully")
-            return response_data
+            return generated_text
+            
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Error parsing JSON response: {str(e)}", exc_info=True)
+            raise APIError(
+                status_code=500,
+                detail=f"Error parsing response: {str(e)}"
+            )
         except Exception as e:
             self.logger.error(f"Error generating response: {str(e)}", exc_info=True)
             raise APIError(
