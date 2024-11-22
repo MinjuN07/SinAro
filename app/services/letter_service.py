@@ -56,7 +56,6 @@ class LetterService(BaseService):
         """편지를 생성합니다."""
         template = self._find_letter_template(id, day)
         
-
         prompt = f"""다음 편지를 기반으로 감정과 키워드를 자연스럽게 통합하여 편지를 완성해주세요:
 원본 편지 : {template}
 
@@ -70,7 +69,15 @@ class LetterService(BaseService):
 7. 하나의 완성된 편지로 작성해줘"""
 
         self.logger.debug(f"Generating letter for ID: {id}, Day: {day}")
-        return await self._generate_response(
+        response = await self._generate_response(
             prompt=prompt,
             options=self.options
         )
+        
+        try:
+            ollama_response = json.loads(response)
+            return ollama_response.get('response', '')
+            
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse response: {e}")
+            return ""
