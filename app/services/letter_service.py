@@ -20,22 +20,22 @@ class LetterService(BaseService):
             
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                self.logger.info(f"Letter data loaded successfully. Templates count: {len(data)}")
+                self.logger.info(f"Letter data loaded successfully. count: {len(data)}")
                 return data
                 
         except Exception as e:
             self.logger.error(f"Failed to load letter data: {str(e)}")
             raise APIError(
                 status_code=500,
-                detail="Failed to load letter templates"
+                detail="Failed to load letter"
             )
 
-    def _find_letter_template(self, id: int, day: int) -> str:
-        """ID와 day에 해당하는 편지 템플릿을 찾습니다."""
-        self.logger.debug(f"Searching for template - ID: {id}, Day: {day}")
+    def _find_letter_leeter(self, id: int, day: int) -> str:
+        """ID와 day에 해당하는 편지를 찾습니다."""
+        self.logger.debug(f"Searching for letter - ID: {id}, Day: {day}")
         
         template = next(
-            (letter['template'] for letter in self.letter_data 
+            (letter['text'] for letter in self.letter_data 
             if letter['id'] == id and letter['day'] == day),
             None
         )
@@ -59,7 +59,7 @@ class LetterService(BaseService):
                 f"Number of emotions/keywords: {len(text)}"
             )
             
-            template = self._find_letter_template(id, day)
+            template = self._find_letter_letter(id, day)
             
             emotions_keywords = "\n".join([
                 f"- 감정: {item.emotion}, 키워드: {item.keyword}"
