@@ -31,8 +31,6 @@ class SentimentAnalysisService(BaseService):
         self.logger.debug(f"Parsed result - Emotion: {emotion}, Keyword: {keyword}")
         
         return {
-            "response": {
-                "emotion": emotion,
-                "keyword": keyword
-            }
+            "emotion": emotion,
+            "keyword": keyword
         }
