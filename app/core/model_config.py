@@ -1,11 +1,11 @@
 from enum import Enum
 
 class ModelType(Enum):
-    LETTER = "ko-llama-letter-generator"
-    SENTIMENT = "ko-llama-sentiment-analyzer"
+    LETTER = "ko-gemma-9b"
+    SENTIMENT = "ko-gemma-9b"
     SUMMARY = "ko-llama-diary-summarizer"
     
-# 모델별 파라미터 설정
+    
 MODEL_OPTIONS = {
     ModelType.SENTIMENT: {
         "num_ctx": 8096,
