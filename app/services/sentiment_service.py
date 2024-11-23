@@ -25,8 +25,8 @@ class SentimentAnalysisService(BaseService):
                     f"Response format was unexpected: {response[:200]}"
             )
         
-        emotion = emotion_match.group(1).strip()
-        keyword = keyword_match.group(1).strip()
+        emotion = emotion_match.group(1).strip().strip('"\'')
+        keyword = keyword_match.group(1).strip().strip('"\'')
         
         self.logger.debug(f"Parsed result - Emotion: {emotion}, Keyword: {keyword}")
         
