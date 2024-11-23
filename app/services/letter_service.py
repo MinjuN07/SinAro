@@ -1,6 +1,6 @@
 from app.core.constants import SYSTEM_PROMPTS
 from app.core.exceptions import APIError
-from app.core.model_config import ModelType
+from app.core.model_config import ModelType, MODEL_OPTIONS
 from app.services.base_service import BaseService
 import os
 import json
@@ -9,14 +9,7 @@ from typing import List, Dict
 class LetterService(BaseService):
     def __init__(self):
         super().__init__(ModelType.LETTER)
-        self.options = {
-            "num_ctx": 8096,
-            "num_predict": 4048,
-            "temperature": 0.5,
-            "top_p": 0.7,
-            "top_k": 20,
-            "frequency_penalty": 0.5,
-        }
+        self.options = MODEL_OPTIONS[ModelType.LETTER]
         self.letter_data = self._load_letter_data()
 
     def _load_letter_data(self) -> Dict:
