@@ -1,23 +1,11 @@
-from app.core.model_config import ModelType
+from app.core.model_config import ModelType, MODEL_OPTIONS
 from app.services.base_service import BaseService
-import json
+import re
 
 class SentimentAnalysisService(BaseService):
     def __init__(self):
         super().__init__(ModelType.SENTIMENT)
-        self.options = {
-            "num_ctx": 8096,
-            "temperature": 0.2,
-            "top_p": 0.3, 
-            "top_k": 20,
-            "num_predict": 1024,
-            "repeat_penalty": 1.5,
-            "presence_penalty": 0.5,
-            "frequency_penalty": 0.3,
-            "mirostat": 1,
-            "mirostat_tau": 0.5,
-            "stop": ["\n\n\n","\n\n","\n"]
-        }
+        self.options = MODEL_OPTIONS[ModelType.SENTIMENT]
 
     async def analyze_sentiment(self, text: str):
         self.logger.debug(f"Analyzing text: {text[:100]}...")
@@ -27,19 +15,26 @@ class SentimentAnalysisService(BaseService):
         )
         
         try:
-            ollama_response = json.loads(response)
-            sentiment_response = ollama_response.get('response', '{}')
-            sentiment_response = sentiment_response.replace("emotion:", '"emotion":').replace("keyword:", '"keyword":')
-            parsed_response = json.loads(sentiment_response)
+            cleaned_response = response.replace("'", "").replace('"', "")
+            
+            emotion_match = re.search(r"emotion:\s*([^,]+)", cleaned_response)
+            keyword_match = re.search(r"keyword:\s*([^\}]+)", cleaned_response)
+            
+            emotion = emotion_match.group(1).strip() if emotion_match else ""
+            keyword = keyword_match.group(1).strip() if keyword_match else ""
             
             return {
-                "emotion": parsed_response.get("emotion", ""),
-                "keyword": parsed_response.get("keyword", "")
+                "response": {
+                    "emotion": emotion,
+                    "keyword": keyword
+                }
             }
             
-        except json.JSONDecodeError as e:
+        except Exception as e:
             self.logger.error(f"Failed to parse response: {e}")
             return {
-                "emotion": "",
-                "keyword": "" 
+                "response": {
+                    "emotion": "",
+                    "keyword": ""
+                }
             }
