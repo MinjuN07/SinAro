@@ -10,13 +10,17 @@ class OllamaClient:
         self.base_url = settings.OLLAMA_API_BASE
         self.timeout = httpx.Timeout(300.0)
         
-    async def generate(self, model: str, prompt: str, options: Optional[Dict[str, Any]] = None):
+    async def generate(self, model: str, prompt: str, system: Optional[str] = None, options: Optional[Dict[str, Any]] = None):
         try:
             request_data = {
                 "model": model,
                 "prompt": prompt,
                 "stream": False
             }
+            
+            if system:
+                request_data["system"] = system
+                
             if options:
                 request_data["options"] = options
                 
