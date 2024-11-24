@@ -12,44 +12,6 @@ class LetterService(BaseService):
         self.letter_data = self._load_letter_data()
         self.logger.info("LetterService initialized")
 
-    def _load_letter_data(self) -> Dict:
-        """letter_data.json 파일에서 편지 데이터를 로드합니다."""
-        try:
-            file_path = os.path.join('app', 'data', 'letter_data.json')
-            self.logger.debug(f"Loading letter data from: {file_path}")
-            
-            with open(file_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                self.logger.info(f"Letter data loaded successfully. Templates count: {len(data)}")
-                return data
-                
-        except Exception as e:
-            self.logger.error(f"Failed to load letter data: {str(e)}")
-            raise APIError(
-                status_code=500,
-                detail="Failed to load letter templates"
-            )
-
-    def _find_letter_template(self, id: int, day: int) -> str:
-        """ID와 day에 해당하는 편지를 찾습니다."""
-        self.logger.debug(f"Searching for template - ID: {id}, Day: {day}")
-        
-        template = next(
-            (letter['text'] for letter in self.letter_data 
-            if letter['id'] == id and letter['day'] == day),
-            None
-        )
-        
-        if not template:
-            self.logger.error(f"Template not found - ID: {id}, Day: {day}")
-            raise APIError(
-                status_code=404,
-                detail=f"Template not found for ID {id} and day {day}"
-            )
-            
-        self.logger.debug(f"Template found successfully - ID: {id}, Day: {day}")
-        return template
-
     async def generate_letter(self, id: int, day: int, text: List[EmotionKeyword]):
         """편지를 생성합니다."""
         try:
@@ -96,3 +58,40 @@ class LetterService(BaseService):
                 status_code=500,
                 detail="Failed to generate letter"
             )
+    def _load_letter_data(self) -> Dict:
+        """letter_data.json 파일에서 편지 데이터를 로드합니다."""
+        try:
+            file_path = os.path.join('app', 'data', 'letter_data.json')
+            self.logger.debug(f"Loading letter data from: {file_path}")
+            
+            with open(file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                self.logger.info(f"Letter data loaded successfully. Templates count: {len(data)}")
+                return data
+                
+        except Exception as e:
+            self.logger.error(f"Failed to load letter data: {str(e)}")
+            raise APIError(
+                status_code=500,
+                detail="Failed to load letter templates"
+            )
+
+    def _find_letter_template(self, id: int, day: int) -> str:
+        """ID와 day에 해당하는 편지를 찾습니다."""
+        self.logger.debug(f"Searching for template - ID: {id}, Day: {day}")
+        
+        template = next(
+            (letter['text'] for letter in self.letter_data 
+            if letter['id'] == id and letter['day'] == day),
+            None
+        )
+        
+        if not template:
+            self.logger.error(f"Template not found - ID: {id}, Day: {day}")
+            raise APIError(
+                status_code=404,
+                detail=f"Template not found for ID {id} and day {day}"
+            )
+            
+        self.logger.debug(f"Template found successfully - ID: {id}, Day: {day}")
+        return template
