@@ -15,13 +15,9 @@ async def analyze_sentiment(
     request: SentimentRequest,
     sentiment_service: SentimentAnalysisService = Depends(get_sentiment_service)
 ):
-    """일기를 분석하는 엔드포인트"""
     try:
-        return await sentiment_service.analyze_sentiment(request.text)
+        result = await sentiment_service.analyze_sentiment(request.text)
+        return result
     except Exception as e:
-        logger.error(f"예상치 못한 에러: {str(e)}")
-        return Response(
-            content=json.dumps({"error": str(e)}),
-            media_type="application/json",
-            status_code=500
-        )
+        logger.error(f"Sentiment analysis failed: {str(e)}")
+        raise
