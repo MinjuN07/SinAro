@@ -1,6 +1,7 @@
 from app.core.exceptions import ValidationError, ServiceError
 from app.core.model_config import ModelType
 from app.services.base_service import BaseService
+import logging
 import re
 
 class SentimentAnalysisService(BaseService):
@@ -8,33 +9,33 @@ class SentimentAnalysisService(BaseService):
         super().__init__(ModelType.SENTIMENT)
 
     async def analyze_sentiment(self, text: str):
-        self.logger.debug("Starting sentiment analysis", text_preview=text[:100])
+        self.logger.debug(f"Starting sentiment analysis. Text preview: {text[:100]}")
         
         if not text.strip():
             raise ValidationError("Text cannot be empty")
         
         response = await self._generate_response(prompt=text)
         
-        self.logger.debug("Received model response", response=response)
+        self.logger.debug(f"Received model response: {response}")
         
-        analyze_result = self._analyze_response(response)
+        parsed_result = self._parse_response(response)
         
         self.logger.info(
-            "Sentiment analysis completed",
-            emotion=analyze_result['emotion'],
-            keyword=analyze_result['keyword']
+            f"Sentiment analysis completed. "
+            f"Emotion: {parsed_result['emotion']}, "
+            f"Keyword: {parsed_result['keyword']}"
         )
         
-        return analyze_result
+        return parsed_result
         
-    def _analyze_response(self, response: str) -> dict:
-        emotion_match = re.search(r"emotion:\s*([^,]+)", response)
-        keyword_match = re.search(r"keyword:\s*([^\}]+)", response)
+    def _parse_response(self, response: str) -> dict:
+        emotion_match = re.search(r"emotion\":\s*([^,]+)", response)
+        keyword_match = re.search(r"keyword\":\s*([^\}]+)", response)
         
         if not emotion_match or not keyword_match:
             raise ServiceError(
-                detail="Failed to analyze model response",
-                error_code="ANALYZE_ERROR"
+                detail="Failed to parse model response",
+                error_code="PARSE_ERROR"
             )
         
         return {
