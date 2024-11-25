@@ -29,8 +29,8 @@ class SentimentAnalysisService(BaseService):
         return parsed_result
         
     def _parse_response(self, response: str) -> dict:
-        emotion_match = re.search(r"emotion\":\s*([^,]+)", response)
-        keyword_match = re.search(r"keyword\":\s*([^\}]+)", response)
+        emotion_match = re.search(r"emotion:\s*([^,]+)", response)
+        keyword_match = re.search(r"keyword:\s*([^\}]+)", response)
         
         if not emotion_match or not keyword_match:
             raise ServiceError(
