@@ -73,17 +73,8 @@ class LetterService(BaseService):
         return template
 
     def _create_prompt(self, template: str, emotions_keywords: str) -> str:
-        return f"""'다음 편지를 기반으로 감정과 키워드를 자연스럽게 통합하여 편지를 완성해주세요:
-                    원본 편지: {template}
-
-                    감정과 키워드 목록:
-                    {emotions_keywords}
-
-                    요구사항:
-                    1. 시작 부분과 끝맺음은 그대로 유지해줘
-                    2. 위의 감정과 키워드들을 자연스럽게 편지 내용에 녹여줘
-                    3. 편지의 전체적인 흐름을 자연스럽게 만들어줘
-                    4. 편지의 말투를 고려해줘
-                    5. 반드시 한국어로 작성해줘
-                    6. 이모티콘은 사용하지마
-                    7. 하나의 완성된 편지로 작성해줘'"""
+        return f"""###원본 편지### 
+                    {template}
+                    
+                    ###감정과 키워드 목록###
+                    {emotions_keywords}"""
