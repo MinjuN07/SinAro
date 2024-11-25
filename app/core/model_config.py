@@ -1,8 +1,8 @@
 from enum import Enum
 
 class ModelType(Enum):
-    LETTER = "ko-llama-sentiment-analyzer"
-    SENTIMENT = "ko-llama-letter-generator"
+    LETTER = "ko-gemma-9b"
+    SENTIMENT = "ko-gemma-9b"
     SUMMARY = "ko-llama-diary-summarizer"
     
     
