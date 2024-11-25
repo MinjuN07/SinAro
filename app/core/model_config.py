@@ -21,12 +21,15 @@ MODEL_OPTIONS = {
         "stop": ["\n\n\n","\n\n","\n"]
     },
     ModelType.LETTER: {
-        "num_ctx": 8096,
-        "temperature": 0.5,
-        "top_p": 0.7,
-        "top_k": 20,
-        "num_predict": 4048,
-        "frequency_penalty": 0.5,
+        "num_ctx": 8192,   
+        "temperature": 0.6,     
+        "top_p": 0.85,          
+        "top_k": 40,            
+        "num_predict": 4096,   
+        "frequency_penalty": 0.3,
+        "presence_penalty": 0.3,  
+        "repeat_penalty": 1.1,    
+        "stop": ["\n\n\n", "###"] 
     },
 }
 
