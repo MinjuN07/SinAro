@@ -3,7 +3,6 @@ from enum import Enum
 class ModelType(Enum):
     SENTIMENT = "SENTIMENT"
     LETTER = "LETTER"
-    SUMMARY = "ko-llama-diary-summarizer"
 
 MODEL_NAME = {
     ModelType.SENTIMENT: "ko-gemma-9b",
