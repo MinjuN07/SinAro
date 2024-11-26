@@ -14,6 +14,7 @@ class BaseService:
     async def _generate_response(self, prompt: str) -> str:
         try:
             self.logger.debug(f"Generating response with model {self.model_name}")
+            self.logger.debug(f"Generating response SYSTEM : {self.system}")
             response_data = await self.client.generate(
                 model=self.model_name,
                 prompt=prompt,
