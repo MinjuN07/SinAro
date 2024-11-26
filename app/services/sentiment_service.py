@@ -9,12 +9,13 @@ class SentimentAnalysisService(BaseService):
         super().__init__(ModelType.SENTIMENT)
 
     async def analyze_sentiment(self, text: str):
-        self.logger.debug(f"Starting sentiment analysis. Text preview: {text[:100]}")
+        self.logger.debug(f"Starting sentiment analysis. Text preview: {text[:100]}, Text length: {len(text)}")
         
         if not text.strip():
             raise ValidationError("Text cannot be empty")
         
-        response = await self._generate_response(prompt=text)
+        propmt = f"""입력:{text}"""
+        response = await self._generate_response(prompt=propmt)
         
         self.logger.debug(f"Received model response: {response}")
         
