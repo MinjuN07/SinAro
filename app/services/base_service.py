@@ -1,13 +1,13 @@
 from app.core.exceptions import ServiceError, APIError
 from app.clients.ollama_client import OllamaClient
-from app.core.model_config import ModelType, MODEL_SYSTEM, MODEL_OPTIONS
+from app.core.model_config import ModelType, MODEL_NAME, MODEL_SYSTEM, MODEL_OPTIONS
 import logging
 
 class BaseService:
     def __init__(self, model_type: ModelType):
         self.client = OllamaClient()
-        self.model_name = model_type.value
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.model_name = MODEL_NAME.get(model_type, "")
         self.system = MODEL_SYSTEM.get(model_type, "")
         self.options = MODEL_OPTIONS.get(model_type, {})
 
