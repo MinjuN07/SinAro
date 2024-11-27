@@ -14,10 +14,7 @@ class LetterService(BaseService):
 
     async def generate_letter(self, id: int, day: int, text: List[EmotionKeyword]):
         try:
-            self.logger.info(
-                f"Starting letter generation - ID: {id}, Day: {day}, "
-                f"Emotions count: {len(text)}"
-            )
+            self.logger.info(f"Emotions count: {len(text)}")
             
             template = self._find_letter_template(id, day)
             
@@ -29,7 +26,7 @@ class LetterService(BaseService):
             prompt = self._create_prompt(template, emotions_keywords)
             response = await self._generate_response(prompt=prompt)
             
-            self.logger.info(f"Letter generated successfully - ID: {id}, Day: {day}")
+            self.logger.info(f"Letter generated successfully. response length: {len(response)}")
             return {"response": response}
             
         except Exception as e:
@@ -41,7 +38,7 @@ class LetterService(BaseService):
     def _load_letter_data(self) -> Dict:
         try:
             file_path = os.path.join('app', 'data', 'letter_data.json')
-            self.logger.debug(f"Loading letter templates from: {file_path}")
+            self.logger.info(f"Loading letter templates from: {file_path}")
             
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -56,7 +53,7 @@ class LetterService(BaseService):
             )
 
     def _find_letter_template(self, id: int, day: int) -> str:
-        self.logger.debug(f"Searching for template - ID: {id}, Day: {day}")
+        self.logger.info(f"Searching for template - ID: {id}, Day: {day}")
         
         template = next(
             (letter['text'] for letter in self.letter_data 

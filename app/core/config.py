@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "Sinavro"
     OLLAMA_API_BASE: str = "http://localhost:11434/api"
-    LOG_LEVEL: str = "DEBUG"
+    LOG_LEVEL: str = "INFO"
 
     model_config = {
         "env_file": ".env",

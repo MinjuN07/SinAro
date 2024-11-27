@@ -1,23 +1,21 @@
 from app.core.exceptions import ValidationError, ServiceError
 from app.core.model_config import ModelType
 from app.services.base_service import BaseService
-import logging
 import re
 
 class SentimentAnalysisService(BaseService):
     def __init__(self):
         super().__init__(ModelType.SENTIMENT)
+        self.logger.info("Sentiment service initialized")
 
     async def analyze_sentiment(self, text: str):
-        self.logger.debug(f"Starting sentiment analysis. Text preview: {text[:100]}, Text length: {len(text)}")
+        self.logger.info(f"Starting sentiment analysis. Text preview: {text[:100]}, Text length: {len(text)}")
         
         if not text.strip():
             raise ValidationError("Text cannot be empty")
         
         propmt = f"""입력:{text}"""
         response = await self._generate_response(prompt=propmt)
-        
-        self.logger.debug(f"Received model response: {response}")
         
         parsed_result = self._parse_response(response)
         
