@@ -1,5 +1,5 @@
 from app.models.health import HealthCheckResponse
-from app.core.model_config import ModelType
+from app.core.model_config import ModelType, MODEL_NAME
 import httpx
 from app.core.config import settings
 import logging
@@ -24,7 +24,8 @@ class HealthService:
                     
                     models = {model.get("name") for model in response.json().get("models", [])}
                     for model_type in ModelType:
-                        if model_type.value in models:
+                        model_name = MODEL_NAME[model_type]
+                        if model_name in models:
                             services_status[f"model_{model_type.name.lower()}"] = "loaded"
                         else:
                             services_status[f"model_{model_type.name.lower()}"] = "not_loaded"
