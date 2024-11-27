@@ -83,8 +83,25 @@ class OllamaClient:
                     f"{self.base_url}/generate",
                     json=request_data
                 )
+                
+                if response.status_code != 200:
+                    error_msg = f"Ollama API returned status {response.status_code}"
+                    logger.error(f"{error_msg}: {response.text}")
+                    raise ServiceError(detail=error_msg, error_code="OLLAMA_API_ERROR")
+                
                 return response.json()
                 
+        except httpx.TimeoutException as e:
+            error_msg = f"Request to Ollama API timed out after {self.timeout.read} seconds"
+            logger.error(error_msg)
+            raise ServiceError(detail=error_msg, error_code="OLLAMA_TIMEOUT")
+            
+        except httpx.RequestError as e:
+            error_msg = f"Failed to connect to Ollama API: {str(e)}"
+            logger.error(error_msg)
+            raise ServiceError(detail=error_msg, error_code="OLLAMA_CONNECTION_ERROR")
+            
         except Exception as e:
-            logger.error(f"API 요청 실패: {str(e)}")
-            raise
+            error_msg = f"Unexpected error in Ollama API request: {str(e)}"
+            logger.error(error_msg)
+            raise ServiceError(detail=error_msg, error_code="OLLAMA_UNEXPECTED_ERROR")
