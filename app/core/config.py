@@ -8,6 +8,13 @@ class Settings(BaseSettings):
     OLLAMA_API_BASE: str = "http://localhost:11434/api"
     LOG_LEVEL: str = "INFO"
 
+    OLLAMA_MAX_CONCURRENT_REQUESTS: int = 2 
+    OLLAMA_MAX_QUEUE_SIZE: int = 50         
+    OLLAMA_CONNECT_TIMEOUT: float = 10.0      
+    OLLAMA_READ_TIMEOUT: float = 240.0   
+    OLLAMA_WRITE_TIMEOUT: float = 10.0            
+    OLLAMA_POOL_TIMEOUT: float = 10.0
+
     model_config = {
         "env_file": ".env",
         "extra": "ignore"
